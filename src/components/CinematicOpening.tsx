@@ -48,23 +48,35 @@ export const CinematicOpening: React.FC<CinematicOpeningProps> = ({ elapsedTimeM
       <div className="z-10 pt-10" />
 
       {/* Minimal Sacred Text: "श्री गणेशाय नमः" */}
-      <div className="z-10 flex flex-col items-center text-center px-4 mb-24 max-w-sm">
-        <motion.h2
-          initial={{ opacity: 0, y: 15, filter: 'blur(8px)' }}
+      <div className="z-10 flex flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
           animate={{
             opacity: showText ? 1 : 0,
-            y: showText ? 0 : 15,
-            filter: showText ? 'blur(0px)' : 'blur(8px)',
+            scale: showText ? 1 : 0.9,
+            filter: showText ? 'blur(0px)' : 'blur(10px)',
           }}
-          transition={{ duration: 1.6, ease: 'easeOut' }}
-          className="text-3xl sm:text-4xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-200 to-amber-400 drop-shadow-[0_2px_20px_rgba(245,158,11,0.5)]"
+          transition={{ duration: 1.8, ease: 'easeOut' }}
+          className="text-center"
         >
-          श्री गणेशाय नमः
-        </motion.h2>
+          <h2 className="text-4xl sm:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 drop-shadow-[0_4px_12px_rgba(245,158,11,0.3)]">
+            श्री गणेशाय नमः
+          </h2>
+        </motion.div>
       </div>
 
-      {/* Bottom Space */}
-      <div className="z-10 pb-6" />
+      <div className="z-10 pt-20" />
+
+      {/* Tap indicator */}
+      <motion.div
+        animate={{ opacity: [0.3, 0.8, 0.3] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+      >
+        <p className="text-white/60 text-xs tracking-widest uppercase font-semibold">
+          Tap anywhere to skip
+        </p>
+      </motion.div>
     </div>
   );
 };
