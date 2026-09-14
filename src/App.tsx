@@ -15,7 +15,7 @@ const SCENES: SceneMeta[] = [
   { id: 'scene1_darkness', durationMs: 7000 },
   { id: 'scene2_reveal', durationMs: 8500 },
   { id: 'scene3_divine', durationMs: 8500 },
-  { id: 'scene4_aarti', durationMs: 12000 },
+  { id: 'scene4_aarti', durationMs: 999999 }, // Wait for user to tap through all photos
   { id: 'scene5_signature', durationMs: 16000 },
 ];
 
@@ -27,9 +27,17 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [burstTrigger, setBurstTrigger] = useState(0);
   const [burstPos, setBurstPos] = useState<{ x: number; y: number } | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const holdTimeoutRef = useRef<number | null>(null);
   const isHoldingRef = useRef(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const activeSceneMeta = SCENES.find((s) => s.id === currentScene) || SCENES[0];
 
@@ -81,6 +89,14 @@ export default function App() {
     setBurstPos({ x, y });
     setBurstTrigger((prev) => prev + 1);
   }, []);
+
+  const handleFinishAarti = useCallback(() => {
+    const currentIndex = SCENES.findIndex((s) => s.id === currentScene);
+    if (currentIndex < SCENES.length - 1) {
+      setCurrentScene(SCENES[currentIndex + 1].id);
+      setElapsedTimeMs(0);
+    }
+  }, [currentScene]);
 
   // Automatic Cinematic Progression Timer
   useEffect(() => {
