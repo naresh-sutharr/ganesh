@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-maroon-dark: #120306;
+    --color-maroon-mid: #25070e;
+    --color-maroon-royal: #3f0d19;
+    --color-saffron: #ff9933;
+    --color-gold: #d4af37;
+    --color-gold-light: #fbe69b;
+    --color-ivory: #fdfaf4;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-maroon-dark);
+    color: var(--color-ivory);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+  }
+
+  h1, h2, h3, .font-devanagari {
+    font-family: 'Noto Serif Devanagari', serif;
+  }
+
+  .font-display-hindi {
+    font-family: 'Rozha One', 'Noto Serif Devanagari', serif;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+}
+
+@keyframes spinForward {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinReverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes flameFlicker {
+  0% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 10px #ff9900);
+  }
+  25% {
+    transform: scale(1.06, 0.96) rotate(1.5deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 14px #ffaa00);
+  }
+  50% {
+    transform: scale(0.97, 1.04) rotate(-1deg);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 11px #ff7700);
+  }
+  75% {
+    transform: scale(1.03, 1) rotate(0.8deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 15px #ffbb00);
+  }
+  100% {
+    transform: scale(1) rotate(-0.5deg);
+    opacity: 0.96;
+    filter: drop-shadow(0 0 12px #ff9900);
+  }
+}
+
+@keyframes pulseAura {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.45;
+  }
+}
+
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 4.5s ease-in-out infinite;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fff3bf 0%, #ffd700 35%, #d4af37 70%, #fbe69b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-saffron-gradient {
+  background: linear-gradient(135deg, #ffe082 0%, #ff9933 50%, #e65100 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-glow {
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15), inset 0 0 15px rgba(212, 175, 55, 0.05);
+}
+
+.gold-button-glow {
+  box-shadow: 0 4px 20px rgba(255, 170, 0, 0.35), 0 0 35px rgba(212, 175, 55, 0.2);
+}
+
+/* Light sweep shimmer on cards */
+.light-sweep-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-sweep-container::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 40%,
+    rgba(255, 230, 150, 0.12) 50%,
+    transparent 60%
+  );
+  transform: rotate(35deg) translateX(-100%);
+  animation: sweepAnim 6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes sweepAnim {
+  0% {
+    transform: rotate(35deg) translateX(-100%);
+  }
+  30%, 100% {
+    transform: rotate(35deg) translateX(100%);
+  }
+}

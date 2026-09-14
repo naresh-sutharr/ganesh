@@ -1,0 +1,6 @@
+{
+  "name": "Ganesh Chaturthi 2026 - Divine Experience",
+  "description": "A cinematic, mobile-first interactive digital experience for Ganesh Chaturthi 2026, crafted with devotional elegance and code.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
