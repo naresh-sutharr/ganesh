@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 
 interface CinematicInteractiveAartiProps {
   onTriggerBurst: (x: number, y: number) => void;
@@ -19,13 +19,17 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
   onTriggerBurst,
 }) => {
   const [flareActive, setFlareActive] = useState(false);
-  const [touchOffset, setTouchOffset] = useState({ x: 0, y: 0 });
   const [isInteracting, setIsInteracting] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const lastActionTimeRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Cycle through photos every 3.5 seconds
+  // Use MotionValues to prevent React re-renders on every pointer move (Fixes the massive lag)
+  const xOffset = useMotionValue(0);
+  const yOffset = useMotionValue(0);
+  const smoothX = useSpring(xOffset, { damping: 25, stiffness: 220 });
+  const smoothY = useSpring(yOffset, { damping: 25, stiffness: 220 });
+
   useEffect(() => {
     const photoInterval = setInterval(() => {
       setCurrentPhotoIndex((prev) => (prev + 1) % PHOTOS.length);
@@ -60,7 +64,10 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
     const centerY = rect.height * 0.72;
     const dx = Math.max(-90, Math.min(90, e.clientX - rect.left - centerX));
     const dy = Math.max(-50, Math.min(50, e.clientY - rect.top - centerY));
-    setTouchOffset({ x: dx, y: dy });
+    
+    // Direct DOM update via motion values, NO react state updates!
+    xOffset.set(dx);
+    yOffset.set(dy);
 
     const now = Date.now();
     if (now - lastActionTimeRef.current > 700) {
@@ -70,7 +77,8 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
 
   const handlePointerUp = () => {
     setIsInteracting(false);
-    setTouchOffset({ x: 0, y: 0 });
+    xOffset.set(0);
+    yOffset.set(0);
   };
 
   useEffect(() => {
@@ -92,7 +100,7 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
       onPointerCancel={handlePointerUp}
       className="relative w-full h-full flex flex-col justify-between items-center p-6 bg-[#020102] text-[#f7e7ce] select-none overflow-hidden touch-none"
     >
-      {/* 1. Background: Crossfading Photos */}
+      {/* Background Photos */}
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none">
         <AnimatePresence mode="popLayout">
           <motion.img
@@ -107,10 +115,8 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
           />
         </AnimatePresence>
 
-        {/* Optimized Vignette Overlays (No blur) */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#020102] via-transparent to-[#020102]/60 z-0" />
 
-        {/* Dynamic Light Flare without CSS blur filter for performance */}
         <motion.div
           animate={{
             opacity: flareActive ? 0.6 : 0.2,
@@ -121,11 +127,10 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
         />
       </div>
 
-      {/* Top Space */}
       <div className="z-10 pt-10" />
 
       {/* Center Climax Inscription */}
-      <div className="z-10 my-auto text-center px-4 pointer-events-none">
+      <div className="z-10 my-auto text-center px-4 pointer-events-none flex flex-col items-center">
         <motion.h2
           initial={{ opacity: 0, scale: 0.92, y: 15 }}
           animate={{
@@ -138,14 +143,24 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
         >
           गणपति बप्पा मोरया ❤️
         </motion.h2>
+        
+        {/* Instruction in English to guide the user */}
+        <motion.p
+          animate={{ opacity: isInteracting ? 0 : [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="mt-4 text-amber-200/80 text-sm tracking-widest uppercase font-semibold"
+        >
+          Tap & move to perform Aarti
+        </motion.p>
       </div>
 
-      {/* 2. Foreground: Transparent PNG Diya */}
+      {/* Foreground Diya */}
       <div className="z-20 w-full flex flex-col items-center pb-12">
         <motion.div
+          style={{ x: smoothX, y: smoothY }}
           animate={
             isInteracting
-              ? { x: touchOffset.x, y: touchOffset.y }
+              ? undefined
               : {
                   x: [0, 26, 0, -26, 0],
                   y: [-14, 0, 16, 0, -14],
@@ -154,7 +169,7 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
           }
           transition={
             isInteracting
-              ? { type: 'spring', damping: 25, stiffness: 220 }
+              ? undefined
               : {
                   duration: 4.8,
                   repeat: Infinity,
@@ -163,7 +178,6 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
           }
           className="relative cursor-grab active:cursor-grabbing"
         >
-          {/* Using transparent foreground PNG to avoid background box issues */}
           <div className="relative w-44 sm:w-52 h-auto">
             <img
               src="/images/real_diya_foreground.png"
@@ -171,7 +185,6 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
               className="w-full h-auto object-contain pointer-events-none select-none"
             />
             
-            {/* Simple simulated flame glow without heavy blur filters */}
             <motion.div
               animate={{
                 scale: flareActive ? [1, 1.2, 1.1] : [1, 1.05, 0.95, 1.02, 1],
