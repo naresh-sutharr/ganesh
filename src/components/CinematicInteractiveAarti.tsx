@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
-import { devotionalAudio } from '../utils/audio';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface CinematicInteractiveAartiProps {
   onTriggerBurst: (x: number, y: number) => void;
 }
+
+const PHOTOS = [
+  '/images/photo1.jpg',
+  '/images/photo2.jpg',
+  '/images/photo3.jpg',
+  '/images/photo4.jpg',
+  '/images/photo5.jpg',
+  '/images/photo6.jpg',
+  '/images/photo7.jpg'
+];
 
 export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps> = ({
   onTriggerBurst,
@@ -12,8 +21,17 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
   const [flareActive, setFlareActive] = useState(false);
   const [touchOffset, setTouchOffset] = useState({ x: 0, y: 0 });
   const [isInteracting, setIsInteracting] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const lastActionTimeRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Cycle through photos every 3.5 seconds
+  useEffect(() => {
+    const photoInterval = setInterval(() => {
+      setCurrentPhotoIndex((prev) => (prev + 1) % PHOTOS.length);
+    }, 3500);
+    return () => clearInterval(photoInterval);
+  }, []);
 
   const triggerAartiBurst = (clientX: number, clientY: number) => {
     const now = Date.now();
@@ -23,7 +41,6 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
     setFlareActive(true);
     setTimeout(() => setFlareActive(false), 800);
 
-    devotionalAudio.playTempleBell();
     onTriggerBurst(clientX, clientY);
 
     if (navigator.vibrate) {
@@ -56,7 +73,6 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
     setTouchOffset({ x: 0, y: 0 });
   };
 
-  // Initial bell chime as Aarti begins
   useEffect(() => {
     const timer = setTimeout(() => {
       if (containerRef.current) {
@@ -76,41 +92,39 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
       onPointerCancel={handlePointerUp}
       className="relative w-full h-full flex flex-col justify-between items-center p-6 bg-[#020102] text-[#f7e7ce] select-none overflow-hidden touch-none"
     >
-      {/* 1. Background: Real Consecrated Ganpati Idol */}
+      {/* 1. Background: Crossfading Photos */}
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none">
-        <motion.div
-          animate={{
-            scale: flareActive ? 1.02 : 1.0,
-            opacity: flareActive ? 1 : 0.9,
-          }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="relative w-full h-full flex items-center justify-center"
-        >
-          <img
-            src="/images/photo1.jpg"
-            alt="Real consecrated Ganpati idol in divine golden illumination"
-            className="w-full h-full object-cover object-center opacity-80"
+        <AnimatePresence mode="popLayout">
+          <motion.img
+            key={currentPhotoIndex}
+            src={PHOTOS[currentPhotoIndex]}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.8, scale: flareActive ? 1.02 : 1.0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            alt="Ganpati Photo"
+            className="absolute inset-0 w-full h-full object-cover object-center"
           />
+        </AnimatePresence>
 
-          {/* Vignette Overlays (Optimized) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#020102] via-transparent to-[#020102]/50" />
-        </motion.div>
+        {/* Optimized Vignette Overlays (No blur) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020102] via-transparent to-[#020102]/60 z-0" />
 
-        {/* Dynamic Light Flare from Diya onto Ganpati's face (Optimized blur) */}
+        {/* Dynamic Light Flare without CSS blur filter for performance */}
         <motion.div
           animate={{
             opacity: flareActive ? 0.6 : 0.2,
             scale: flareActive ? 1.1 : 1.0,
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-amber-500/30 blur-2xl"
+          className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/50 via-amber-600/10 to-transparent z-1"
         />
       </div>
 
       {/* Top Space */}
       <div className="z-10 pt-10" />
 
-      {/* Center Climax Inscription: "गणपति बप्पा मोरया ❤️" */}
+      {/* Center Climax Inscription */}
       <div className="z-10 my-auto text-center px-4 pointer-events-none">
         <motion.h2
           initial={{ opacity: 0, scale: 0.92, y: 15 }}
@@ -126,7 +140,7 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
         </motion.h2>
       </div>
 
-      {/* 2. Foreground: Real Clay Diya with Real Flame Performing Aarti Circles */}
+      {/* 2. Foreground: Transparent PNG Diya */}
       <div className="z-20 w-full flex flex-col items-center pb-12">
         <motion.div
           animate={
@@ -149,12 +163,26 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
           }
           className="relative cursor-grab active:cursor-grabbing"
         >
-          {/* Real Clay Diya Image with Screen Blend Mode (Optimized) */}
-          <div className="relative w-44 sm:w-52 h-auto mix-blend-screen">
+          {/* Using transparent foreground PNG to avoid background box issues */}
+          <div className="relative w-44 sm:w-52 h-auto">
             <img
-              src="/images/real_diya_dark.jpg"
+              src="/images/real_diya_foreground.png"
               alt="Real terracotta clay diya burning with sacred flame"
               className="w-full h-auto object-contain pointer-events-none select-none"
+            />
+            
+            {/* Simple simulated flame glow without heavy blur filters */}
+            <motion.div
+              animate={{
+                scale: flareActive ? [1, 1.2, 1.1] : [1, 1.05, 0.95, 1.02, 1],
+                opacity: flareActive ? [0.6, 0.9, 0.7] : [0.5, 0.7, 0.4, 0.6, 0.5],
+              }}
+              transition={{
+                duration: flareActive ? 0.6 : 2.5,
+                repeat: flareActive ? 0 : Infinity,
+                ease: 'easeInOut',
+              }}
+              className="absolute top-[32%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-300/60 via-orange-500/20 to-transparent pointer-events-none"
             />
           </div>
         </motion.div>
