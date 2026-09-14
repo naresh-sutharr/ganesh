@@ -80,47 +80,30 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none">
         <motion.div
           animate={{
-            scale: flareActive ? 1.04 : 1.02,
-            filter: flareActive
-              ? 'brightness(1.1) contrast(1.08)'
-              : 'brightness(0.96) contrast(1.04)',
+            scale: flareActive ? 1.02 : 1.0,
+            opacity: flareActive ? 1 : 0.9,
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="relative w-full h-full flex items-center justify-center"
         >
           <img
-            src="/images/ganpati_real.jpg"
+            src="/images/photo1.jpg"
             alt="Real consecrated Ganpati idol in divine golden illumination"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center opacity-80"
           />
 
-          {/* Vignette Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#020102] via-[#020102]/20 to-[#020102]/70" />
-          <div className="absolute inset-0 bg-radial from-transparent via-[#020102]/25 to-[#020102]/85" />
+          {/* Vignette Overlays (Optimized) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020102] via-transparent to-[#020102]/50" />
         </motion.div>
 
-        {/* Dynamic Light Flare from Diya onto Ganpati's face */}
+        {/* Dynamic Light Flare from Diya onto Ganpati's face (Optimized blur) */}
         <motion.div
           animate={{
-            opacity: flareActive ? 0.75 : 0.35,
-            scale: flareActive ? 1.25 : 1.0,
+            opacity: flareActive ? 0.6 : 0.2,
+            scale: flareActive ? 1.1 : 1.0,
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-gradient-to-r from-amber-400/25 via-yellow-400/35 to-amber-500/25 blur-3xl"
-        />
-
-        {/* Incense Smoke */}
-        <motion.div
-          animate={{
-            y: [-15, -45, -15],
-            opacity: [0.15, 0.3, 0.15],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute top-[35%] left-1/2 -translate-x-1/2 w-44 h-52 bg-gradient-to-t from-amber-200/10 via-amber-100/5 to-transparent blur-2xl"
+          className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-amber-500/30 blur-2xl"
         />
       </div>
 
@@ -137,7 +120,7 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
             y: 0,
           }}
           transition={{ duration: 0.6 }}
-          className="text-3xl sm:text-4xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-200 to-amber-400 drop-shadow-[0_2px_30px_rgba(245,158,11,0.7)]"
+          className="text-3xl sm:text-4xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-200 to-amber-400"
         >
           गणपति बप्पा मोरया ❤️
         </motion.h2>
@@ -166,26 +149,12 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
           }
           className="relative cursor-grab active:cursor-grabbing"
         >
-          {/* Real Clay Diya Image Cutout with Natural Flame */}
-          <div className="relative w-44 sm:w-52 h-auto filter drop-shadow-[0_12px_30px_rgba(0,0,0,0.9)]">
+          {/* Real Clay Diya Image with Screen Blend Mode (Optimized) */}
+          <div className="relative w-44 sm:w-52 h-auto mix-blend-screen">
             <img
-              src="/images/real_diya_foreground.png"
+              src="/images/real_diya_dark.jpg"
               alt="Real terracotta clay diya burning with sacred flame"
-              className="w-full h-auto object-contain pointer-events-none select-none filter brightness-[1.05] contrast-[1.12]"
-            />
-
-            {/* Glowing Flame Flare Pulse */}
-            <motion.div
-              animate={{
-                scale: flareActive ? [1, 1.35, 1.1] : [1, 1.06, 0.97, 1.04, 1],
-                opacity: flareActive ? [0.6, 0.95, 0.7] : [0.45, 0.7, 0.5, 0.75, 0.45],
-              }}
-              transition={{
-                duration: flareActive ? 0.6 : 2.5,
-                repeat: flareActive ? 0 : Infinity,
-                ease: 'easeInOut',
-              }}
-              className="absolute top-[32%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-gradient-to-r from-amber-400/35 via-yellow-300/45 to-orange-500/35 blur-xl pointer-events-none"
+              className="w-full h-auto object-contain pointer-events-none select-none"
             />
           </div>
         </motion.div>

@@ -45,7 +45,7 @@ export const ParticleCanvas: React.FC<ParticleCanvasProps> = ({ burstTrigger = 0
     window.addEventListener('resize', handleResize);
 
     // Initialize gentle background golden particles & petals
-    const particleCount = window.innerWidth < 640 ? 35 : 55;
+    const particleCount = window.innerWidth < 640 ? 15 : 35;
     const particles: Particle[] = [];
 
     const goldColors = ['#f5d77f', '#ffd700', '#d4af37', '#ffeaa7'];

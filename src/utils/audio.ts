@@ -92,64 +92,11 @@ class DevotionalAudioEngine {
 
   // Authentic synthesized Temple Bell (Ghantha) on interactions
   public playTempleBell() {
-    this.initContext();
-    if (!this.ctx || !this.masterGain) return;
-
-    const now = this.ctx.currentTime;
-    // Temple bell frequencies have distinct inharmonic partials
-    const partials = [
-      { f: 587.33, g: 0.3, d: 2.8 },   // Fundamental D5
-      { f: 1174.66, g: 0.22, d: 2.2 }, // Octave
-      { f: 1650.0, g: 0.15, d: 1.8 },  // High overtone
-      { f: 2349.32, g: 0.1, d: 1.2 },  // Metallic sheen
-      { f: 880.0, g: 0.18, d: 2.5 },   // Fifth
-    ];
-
-    partials.forEach(({ f, g, d }) => {
-      const osc = this.ctx!.createOscillator();
-      const gain = this.ctx!.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(f, now);
-
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(g * 0.7, now + 0.015);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + d);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain!);
-      if (this.reverbNode) {
-        gain.connect(this.reverbNode);
-      }
-
-      osc.start(now);
-      osc.stop(now + d + 0.1);
-    });
+    // Disabled as requested: Only om_gan background track should play.
   }
 
   public playChime() {
-    this.initContext();
-    if (!this.ctx || !this.masterGain) return;
-    const now = this.ctx.currentTime;
-    const notes = [880, 1174.66, 1318.51, 1760];
-    notes.forEach((freq, i) => {
-      const time = now + i * 0.08;
-      const osc = this.ctx!.createOscillator();
-      const gain = this.ctx!.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, time);
-
-      gain.gain.setValueAtTime(0.0001, time);
-      gain.gain.exponentialRampToValueAtTime(0.12, time + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.9);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain!);
-      if (this.reverbNode) gain.connect(this.reverbNode);
-
-      osc.start(time);
-      osc.stop(time + 1.0);
-    });
+    // Disabled as requested: Only om_gan background track should play.
   }
 
   public toggleMute(): boolean {
