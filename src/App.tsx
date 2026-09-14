@@ -104,22 +104,21 @@ export default function App() {
 
     const tick = 50;
     const interval = setInterval(() => {
-      setElapsedTimeMs((prev) => {
-        const nextTime = prev + tick;
-        if (activeSceneMeta && nextTime >= activeSceneMeta.durationMs) {
-          const currentIndex = SCENES.findIndex((s) => s.id === currentScene);
-          if (currentIndex < SCENES.length - 1) {
-            setCurrentScene(SCENES[currentIndex + 1].id);
-            return 0;
-          }
-          return activeSceneMeta.durationMs;
-        }
-        return nextTime;
-      });
+      setElapsedTimeMs((prev) => prev + tick);
     }, tick);
 
     return () => clearInterval(interval);
-  }, [hasStarted, isPaused, currentScene, activeSceneMeta]);
+  }, [hasStarted, isPaused, currentScene]);
+
+  useEffect(() => {
+    if (activeSceneMeta && elapsedTimeMs >= activeSceneMeta.durationMs) {
+      const currentIndex = SCENES.findIndex((s) => s.id === currentScene);
+      if (currentIndex < SCENES.length - 1) {
+        setCurrentScene(SCENES[currentIndex + 1].id);
+        setElapsedTimeMs(0);
+      }
+    }
+  }, [elapsedTimeMs, activeSceneMeta, currentScene]);
 
   // Touch and Hold (Pause) / Tap Left or Right (Rewind/Skip)
   const handlePointerDown = (e: React.PointerEvent) => {

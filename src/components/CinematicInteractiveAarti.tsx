@@ -72,19 +72,21 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
         >
           गणपति बप्पा मोरया ❤️
         </motion.h2>
-        
-        {/* Instruction in English */}
-        <motion.p
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="mt-6 text-white text-sm sm:text-base tracking-widest uppercase font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] bg-black/40 px-4 py-2 rounded-full"
-        >
-          Tap to change photo
-        </motion.p>
       </div>
 
+      {/* Instruction in English - Positioned at the very bottom */}
+      <motion.div
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+      >
+        <p className="text-white text-sm sm:text-base tracking-widest uppercase font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] bg-black/50 px-6 py-2 rounded-full border border-white/20">
+          Tap to change photo
+        </p>
+      </motion.div>
+
       {/* Foreground Aarti Thali Auto-Animating */}
-      <div className="z-20 w-full flex flex-col items-center pb-12 pointer-events-none">
+      <div className="z-20 w-full flex flex-col items-center pb-24 pointer-events-none">
         <motion.div
           animate={{
             x: [0, 40, 0, -40, 0],
@@ -100,7 +102,7 @@ export const CinematicInteractiveAarti: React.FC<CinematicInteractiveAartiProps>
         >
           <div className="relative w-56 sm:w-64 h-auto drop-shadow-2xl">
             <img
-              src="/images/aarti_thali.png"
+              src="/images/real_diya_foreground.png"
               alt="Real Aarti Thali"
               className="w-full h-auto object-contain select-none"
             />
